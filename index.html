@@ -1,1 +1,56 @@
+<div id="id"></div>
+<div id="url"></div>
+<div id="image"></div>
+<style>
+  .button {
+    background-color: #6a5fd3;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  </style>
+<script>
+function ajax_get(url, callback) {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      console.log('responseText:' + xmlhttp.responseText);
+      try {
+        var data = JSON.parse(xmlhttp.responseText);
+      } catch (err) {
+        console.log(err.message + " in " + xmlhttp.responseText);
+        return;
+      }
+      callback(data);
+    }
+  };
 
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+}
+function cat() {
+  ajax_get('https://api.thecatapi.com/v1/images/search?size=full', function(data) {
+
+    var html = '<img src="' + data[0]["url"] + '"  style="max-height: 600; max-width: 800">';
+    document.getElementById("image").innerHTML = html;
+    document.getElementById("url").innerHTML = '<a href="' + data[0]["url"] + '">Link</a>';
+  });
+}
+function dog() {
+  ajax_get('https://api.thedogapi.com/v1/images/search?size=full', function(data) {
+
+    var html = '<img src="' + data[0]["url"] + '"  style="max-height: 600; max-width: 800">';
+    document.getElementById("image").innerHTML = html;
+    document.getElementById("url").innerHTML = '<a href="' + data[0]["url"] + '">Link</a>';
+  });
+}
+cat();
+</script>
+<button class="button" type="button" onclick="cat()">new cat</button>
+<button class="button" type="button" onclick="dog()">new dog</button>
